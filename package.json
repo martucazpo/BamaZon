@@ -1,0 +1,22 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bamaZon.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martucazpo/BamaZon.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/martucazpo/BamaZon/issues"
+  },
+  "homepage": "https://github.com/martucazpo/BamaZon#readme",
+  "dependencies": {
+    "inquirer": "^6.5.0"
+  }
+}
