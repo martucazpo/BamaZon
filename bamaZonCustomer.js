@@ -34,11 +34,46 @@ function readProducts() {
 
   connection.query("SELECT * FROM products", function (err, res) {
 
-    console.log("------------------------------------------------------------------------------------------")
+    console.log("------------------------------------------------------------------------------------------");
     for (var i = 0; i < res.length; i++) {
       console.log("ID: " + res[i].item_id + " | Merchandise: " + res[i].product_name + " | Department: " + res[i].department_name + " |   $" + res[i].price_to_customer + " | ");
     }
     console.log("-------------------------------------------------------------------------------------------");
   });
+  purchase();
+}
 
+function purchase() {
+
+  connection.query("SELECT * FROM products", function (err, res) {
+    inquirer
+      .prompt([{
+          name: "choice",
+          type: "rawlist",
+          choices: function () {
+            var choiceArray = [];
+            for (var j = 0; j < res.length; j++) {
+              choiceArray.push(res[j].item_id + " " + res[j].product_name);
+            }
+            return choiceArray;
+          },
+          message: "Welcome BamaZon customer, which item would you like to purchase?"
+
+        },
+        {
+          name: "quantity",
+          type: "input",
+          message: "How many would you like to purchase?"
+        }
+      ])
+      .then(function (answer) {
+        // get the information of the chosen item
+        var chosenItem;
+        for (var k = 0; i < res.length; k++) {
+          if (res[k].item_id === answer.choice) {
+            chosenItem = res[k];
+          }
+        }
+      });
+  });
 }
