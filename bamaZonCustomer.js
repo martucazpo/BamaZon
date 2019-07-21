@@ -45,7 +45,12 @@ function readProducts() {
 
 function purchase() {
 
+  var chosenItem;
+  var chooseId;
+  var chosenQuantity;
+
   connection.query("SELECT * FROM products", function (err, res) {
+
     inquirer
       .prompt([{
           name: "choice",
@@ -58,7 +63,6 @@ function purchase() {
             return choiceArray;
           },
           message: "Welcome BamaZon customer, which item would you like to purchase?"
-
         },
         {
           name: "quantity",
@@ -66,14 +70,25 @@ function purchase() {
           message: "How many would you like to purchase?"
         }
       ])
+
       .then(function (answer) {
         // get the information of the chosen item
-        var chosenItem;
-        for (var k = 0; i < res.length; k++) {
-          if (res[k].item_id === answer.choice) {
-            chosenItem = res[k];
+        chosenItem = answer.choice;
+        chooseId = chosenItem.slice(2);
+        chosenQuantity = answer.quantity;
+        purchArr = [];
+        for( var k = 0; k < res.length; k++){
+          if(res[k].product_name === chooseId){
+            purchArr.push("$"+(res[k].price_to_customer * chosenQuantity).toFixed(2));
           }
         }
+        console.log(purchArr);
       });
   });
+
+  //connection.query("SELECT * FROM products WHERE product_name = " + chooseID, function (err, res) {
+   // if (err) throw err;
+   // console.log(res);
+ // });
+
 }
