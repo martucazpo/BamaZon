@@ -77,18 +77,33 @@ function purchase() {
         chooseId = chosenItem.slice(2);
         chosenQuantity = answer.quantity;
         purchArr = [];
-        for( var k = 0; k < res.length; k++){
-          if(res[k].product_name === chooseId){
-            purchArr.push("$"+(res[k].price_to_customer * chosenQuantity).toFixed(2));
+        for (var k = 0; k < res.length; k++) {
+          if (res[k].product_name === chooseId) {
+            if (res[k].stock_quantity <= 0 || res[k].stock_quantity - chosenQuantity <= 0) {
+              notEnough();
+              break;
+            } else {
+              purchArr.push("$" + (res[k].price_to_customer * chosenQuantity).toFixed(2));
+            }
           }
         }
-        console.log(purchArr);
+        console.log("Your total for " + chosenQuantity + "  " + chooseId + "(s) is: " + purchArr);
       });
   });
 
   //connection.query("SELECT * FROM products WHERE product_name = " + chooseID, function (err, res) {
-   // if (err) throw err;
-   // console.log(res);
- // });
+  // if (err) throw err;
+  // console.log(res);
+  // });
+
+}
+
+function notEnough() {
+  inquirer
+  .prompt([
+    {
+
+    }
+  ]);
 
 }
