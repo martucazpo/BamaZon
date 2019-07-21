@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "popsJuly1",
+  password: "popsjuly1",
   database: "BamaZon_DB"
 });
 
@@ -20,5 +20,14 @@ var connection = mysql.createConnection({
 connection.connect(function(err) {
   if (err) throw err;
   // run the start function after the connection is made to prompt the user
-  start();
+  readProducts();
 });
+function readProducts() {
+  console.log("Selecting all products...\n");
+  connection.query("SELECT * FROM products", function(err, res) {
+    if (err) throw err;
+    // Log all results of the SELECT statement
+    console.log(res);
+    connection.end();
+  });
+}
