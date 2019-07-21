@@ -17,17 +17,28 @@ var connection = mysql.createConnection({
 });
 
 // connect to the mysql server and sql database
-connection.connect(function(err) {
+connection.connect(function (err) {
   if (err) throw err;
   // run the start function after the connection is made to prompt the user
   readProducts();
 });
+
 function readProducts() {
-  console.log("Selecting all products...\n");
+  /*console.log("Selecting all products...\n");
   connection.query("SELECT * FROM products", function(err, res) {
     if (err) throw err;
     // Log all results of the SELECT statement
     console.log(res);
     connection.end();
+  });*/
+
+  connection.query("SELECT * FROM products", function (err, res) {
+
+    console.log("------------------------------------------------------------------------------------------")
+    for (var i = 0; i < res.length; i++) {
+      console.log("ID: " + res[i].item_id + " | Merchandise: " + res[i].product_name + " | Department: " + res[i].department_name + " |   $" + res[i].price_to_customer + " | ");
+    }
+    console.log("-------------------------------------------------------------------------------------------");
   });
+
 }
