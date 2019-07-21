@@ -80,14 +80,15 @@ function purchase() {
         for (var k = 0; k < res.length; k++) {
           if (res[k].product_name === chooseId) {
             if (res[k].stock_quantity <= 0 || res[k].stock_quantity - chosenQuantity <= 0) {
+              console.log("I am so sorry, we only have " + res[k].stock_quantity + " " + chooseId + " in stock.");
               notEnough();
-              break;
             } else {
               purchArr.push("$" + (res[k].price_to_customer * chosenQuantity).toFixed(2));
             }
           }
         }
         console.log("Your total for " + chosenQuantity + "  " + chooseId + "(s) is: " + purchArr);
+        moMoney();
       });
   });
 
@@ -102,8 +103,49 @@ function notEnough() {
   inquirer
   .prompt([
     {
-
+      name : "stayOrGo",
+      type: "list",
+      message: "Would you like to re-order, or would you prefer to wait until more are in stock?",
+      choices:["Yes, I would like to re-order please.", "Thank-you, but maybe I will come back at another time."]
     }
-  ]);
+  ])
 
+  .then(function(answer){
+    if(answer.stayOrGo === "Yes, I would like to re-order please."){
+      console.log("Ok, here is our merchandise list again.");
+      purchase();
+    }
+    if (answer.stayOrGo === "Thank-you, but maybe I will come back at another time."){
+      console.log("I am sorry that we could not help you today, but please come back soon!");
+      myExit();
+    }
+  });
+
+}
+
+function moMoney(){
+  inquirer
+  .prompt([
+    {
+      name: "saveOrSpend",
+      type: "list",
+      message: "Can I help you with anything else?",
+      choices:["Yes, I would like to see that merchandise list again, please.", "No, thank-you, I am good."]
+    }
+  ])
+  .then(function(answer){
+    if(answer.saveOrSpend === "Yes, I would like to see that merchandise list again, please."){
+      console.log("Of course, here it is: ");
+      purchase();
+    }
+    if(answer.saveOrSpend === "No, thank-you, I am good."){
+      console.log("Well thank you for your business, and please come back soon!");
+      myExit();
+    }
+  });
+}
+
+function myExit() {
+  console.log("Good-bye and thank you for choosing BamaZon!");
+  connection.end();
 }
