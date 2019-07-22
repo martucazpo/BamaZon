@@ -78,19 +78,21 @@ function purchase() {
         chosenQuantity = answer.quantity;
         purchArr = [];
         for (var k = 0; k < res.length; k++) {
-          while (res[k].product_name === chooseId) {
-            if (res[k].stock_quantity <= 0 || res[k].stock_quantity - chosenQuantity <= 0) {
-              console.log("I am so sorry, we only have " + res[k].stock_quantity + " " + chooseId + " in stock.");
-              notEnough();
-              break;
-            } else {
-              purchArr.push("$" + (res[k].price_to_customer * chosenQuantity).toFixed(2));
-            }
+          if (res[k].product_name === chooseId && res[k].stock_quantity <= 0 || res[k].stock_quantity - chosenQuantity <= 0) {
+            console.log("I am so sorry, we only have " + res[k].stock_quantity + " " + chooseId + " in stock.");
+            notEnough();
+             break;
+          } else if (res[k].product_name === chooseId && res[k].stock_quantity >= 0 && res[k].stock_quantity - chosenQuantity >= 0) {
+            purchArr.push("$" + (res[k].price_to_customer * chosenQuantity).toFixed(2));
+            console.log("Your total for " + chosenQuantity + "  " + chooseId + "(s) is: " + purchArr);
+            moMoney();
+            break;
+          } else {
+            myExit();
           }
         }
-        console.log("Your total for " + chosenQuantity + "  " + chooseId + "(s) is: " + purchArr);
-        moMoney();
-        
+
+
       });
   });
 
@@ -103,50 +105,49 @@ function purchase() {
 
 function notEnough() {
   inquirer
-  .prompt([
-    {
-      name : "stayOrGo",
+    .prompt([{
+      name: "stayOrGo",
       type: "list",
       message: "Would you like to re-order, or would you prefer to wait until more are in stock?",
-      choices:["Yes, I would like to re-order please.", "Thank-you, but maybe I will come back at another time."]
-    }
-  ])
+      // choices: ["Yes, I would like to re-order please.", "Thank-you, but maybe I will come back at another time."]
+      choices: ["stay", "go"]
+    }])
 
-  .then(function(answer){
-    if(answer.stayOrGo === "Yes, I would like to re-order please."){
-      console.log("Ok, here is our merchandise list again.");
-      purchase();
-    }
-    else //(answer.stayOrGo === "Thank-you, but maybe I will come back at another time.")
-    {
-      console.log("I am sorry that we could not help you today, but please come back soon!");
-      myExit();
-    }
-  });
+    .then(function (answer) {
+      if (answer.stayOrGo === "stay") {
+        //(answer.stayOrGo === "Yes, I would like to re-order please.") {
+        console.log("Ok, here is our merchandise list again.");
+        purchase();
+      } else //(answer.stayOrGo === "Thank-you, but maybe I will come back at another time.")
+      {
+        console.log("I am sorry that we could not help you today, but please come back soon!");
+        myExit();
+      }
+    });
 
 }
 
-function moMoney(){
+function moMoney() {
   inquirer
-  .prompt([
-    {
+    .prompt([{
       name: "saveOrSpend",
       type: "list",
       message: "Can I help you with anything else?",
-      choices:["Yes, I would like to see that merchandise list again, please.", "No, thank-you, I am good."]
-    }
-  ])
-  .then(function(answer){
-    if(answer.saveOrSpend === "Yes, I would like to see that merchandise list again, please."){
-      console.log("Of course, here it is: ");
-      purchase();
-    }
-    else//(answer.saveOrSpend === "No, thank-you, I am good.")
-    {
-      console.log("Well thank you for your business, and please come back soon!");
-      myExit();
-    }
-  });
+      //choices: ["Yes, I would like to see that merchandise list again, please.", "No, thank-you, I am good."]
+      choices: ["save", "spend"]
+    }])
+    .then(function (answer) {
+      if (answer.saveOrSpend === "spend") {
+        //(answer.saveOrSpend === "Yes, I would like to see that merchandise list again, please.") {
+        console.log("Of course, here it is: ");
+        purchase();
+      } else //(answer.saveOrSpend === "No, thank-you, I am good.")
+      {
+        console.log("Well thank you for your business, and please come back soon!");
+        myExit();
+      }
+    
+    });
 }
 
 function myExit() {
