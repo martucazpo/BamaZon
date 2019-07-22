@@ -78,10 +78,11 @@ function purchase() {
         chosenQuantity = answer.quantity;
         purchArr = [];
         for (var k = 0; k < res.length; k++) {
-          if (res[k].product_name === chooseId) {
+          while (res[k].product_name === chooseId) {
             if (res[k].stock_quantity <= 0 || res[k].stock_quantity - chosenQuantity <= 0) {
               console.log("I am so sorry, we only have " + res[k].stock_quantity + " " + chooseId + " in stock.");
               notEnough();
+              break;
             } else {
               purchArr.push("$" + (res[k].price_to_customer * chosenQuantity).toFixed(2));
             }
@@ -89,6 +90,7 @@ function purchase() {
         }
         console.log("Your total for " + chosenQuantity + "  " + chooseId + "(s) is: " + purchArr);
         moMoney();
+        
       });
   });
 
@@ -115,7 +117,8 @@ function notEnough() {
       console.log("Ok, here is our merchandise list again.");
       purchase();
     }
-    if (answer.stayOrGo === "Thank-you, but maybe I will come back at another time."){
+    else //(answer.stayOrGo === "Thank-you, but maybe I will come back at another time.")
+    {
       console.log("I am sorry that we could not help you today, but please come back soon!");
       myExit();
     }
@@ -138,7 +141,8 @@ function moMoney(){
       console.log("Of course, here it is: ");
       purchase();
     }
-    if(answer.saveOrSpend === "No, thank-you, I am good."){
+    else//(answer.saveOrSpend === "No, thank-you, I am good.")
+    {
       console.log("Well thank you for your business, and please come back soon!");
       myExit();
     }
