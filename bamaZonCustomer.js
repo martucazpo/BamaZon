@@ -79,7 +79,7 @@ function purchase() {
         purchArr = [];
         for (var k = 0; k < res.length; k++) {
           if (res[k].product_name === chooseId && res[k].stock_quantity <= 0 || res[k].stock_quantity - chosenQuantity <= 0) {
-            console.log("I am so sorry, we only have " + res[k].stock_quantity + " " + chooseId + " in stock.");
+            console.log("I am so sorry, we only have " + res[k].stock_quantity + " " + chooseId + "(s) in stock.");
             notEnough();
              break;
           } else if (res[k].product_name === chooseId && res[k].stock_quantity >= 0 && res[k].stock_quantity - chosenQuantity >= 0) {
@@ -117,7 +117,7 @@ function notEnough() {
       if// (answer.stayOrGo === "stay") {
         (answer.stayOrGo === "Yes, I would like to re-order please.") {
         console.log("Ok, here is our merchandise list again.");
-          readProducts();
+          purchase();
       } else //(answer.stayOrGo === "Thank-you, but maybe I will come back at another time.")
       {
         console.log("I am sorry that we could not help you today, but please come back soon!");
@@ -140,7 +140,7 @@ function moMoney() {
       if// (answer.saveOrSpend === "spend") {
         (answer.saveOrSpend === "Yes, I would like to see that merchandise list again, please.") {
         console.log("Of course, here it is: ");
-          readProducts();
+          purchase();
       } else //(answer.saveOrSpend === "No, thank-you, I am good.")
       {
         console.log("Well thank you for your business, and please come back soon!");
@@ -153,5 +153,5 @@ function moMoney() {
 
 function myExit() {
   console.log("Good-bye and thank you for choosing BamaZon!");
- // connection.end();
+  connection.end();
 }
