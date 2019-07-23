@@ -78,7 +78,7 @@ function purchase() {
         chosenQuantity = answer.quantity;
         purchArr = [];
         for (var k = 0; k < res.length; k++) {
-          if (res[k].product_name === chooseId && res[k].stock_quantity <= 0 || res[k].stock_quantity - chosenQuantity <= 0) {
+          if (res[k].product_name === chooseId && res[k].stock_quantity <= 0 && res[k].stock_quantity - chosenQuantity <= 0) {
             console.log("I am so sorry, we only have " + res[k].stock_quantity + " " + chooseId + "(s) in stock.");
             notEnough();
              break;
