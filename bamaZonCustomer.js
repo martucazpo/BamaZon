@@ -88,7 +88,7 @@ function purchase() {
             moMoney();
             break;
           } else {
-            myExit();
+
           }
         }
 
@@ -109,15 +109,15 @@ function notEnough() {
       name: "stayOrGo",
       type: "list",
       message: "Would you like to re-order, or would you prefer to wait until more are in stock?",
-      // choices: ["Yes, I would like to re-order please.", "Thank-you, but maybe I will come back at another time."]
-      choices: ["stay", "go"]
+      choices: ["Yes, I would like to re-order please.", "Thank-you, but maybe I will come back at another time."]
+     // choices: ["stay", "go"]
     }])
 
     .then(function (answer) {
-      if (answer.stayOrGo === "stay") {
-        //(answer.stayOrGo === "Yes, I would like to re-order please.") {
+      if// (answer.stayOrGo === "stay") {
+        (answer.stayOrGo === "Yes, I would like to re-order please.") {
         console.log("Ok, here is our merchandise list again.");
-        purchase();
+          readProducts();
       } else //(answer.stayOrGo === "Thank-you, but maybe I will come back at another time.")
       {
         console.log("I am sorry that we could not help you today, but please come back soon!");
@@ -133,14 +133,14 @@ function moMoney() {
       name: "saveOrSpend",
       type: "list",
       message: "Can I help you with anything else?",
-      //choices: ["Yes, I would like to see that merchandise list again, please.", "No, thank-you, I am good."]
-      choices: ["save", "spend"]
+      choices: ["Yes, I would like to see that merchandise list again, please.", "No, thank-you, I am good."]
+      //choices: ["save", "spend"]
     }])
     .then(function (answer) {
-      if (answer.saveOrSpend === "spend") {
-        //(answer.saveOrSpend === "Yes, I would like to see that merchandise list again, please.") {
+      if// (answer.saveOrSpend === "spend") {
+        (answer.saveOrSpend === "Yes, I would like to see that merchandise list again, please.") {
         console.log("Of course, here it is: ");
-        purchase();
+          readProducts();
       } else //(answer.saveOrSpend === "No, thank-you, I am good.")
       {
         console.log("Well thank you for your business, and please come back soon!");
@@ -148,9 +148,10 @@ function moMoney() {
       }
     
     });
+    
 }
 
 function myExit() {
   console.log("Good-bye and thank you for choosing BamaZon!");
-  connection.end();
+ // connection.end();
 }
