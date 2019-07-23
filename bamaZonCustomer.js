@@ -1,5 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var chalk = require("chalk");
 
 // create the connection information for the sql database
 var connection = mysql.createConnection({
@@ -34,11 +35,11 @@ function readProducts() {
 
   connection.query("SELECT * FROM products", function (err, res) {
 
-    console.log("------------------------------------------------------------------------------------------");
+    console.log(chalk.yellow("------------------------------------------------------------------------------------------"));
     for (var i = 0; i < res.length; i++) {
-      console.log("ID: " + res[i].item_id + " | Merchandise: " + res[i].product_name + " | Department: " + res[i].department_name + " |   $" + res[i].price_to_customer + " | ");
+      console.log(chalk.cyan("ID: ") + res[i].item_id + chalk.cyan(" | Merchandise: ") + chalk.bold.yellow(res[i].product_name) + chalk.cyan(" | Department: ") + chalk.magenta(res[i].department_name) + chalk.cyan(" | ") + chalk.yellow("$" + res[i].price_to_customer) + chalk.cyan(" | "));
     }
-    console.log("-------------------------------------------------------------------------------------------");
+    console.log(chalk.yellow("-------------------------------------------------------------------------------------------"));
   });
   purchase();
 }
@@ -78,15 +79,35 @@ function purchase() {
         chosenQuantity = answer.quantity;
         purchArr = [];
         for (var k = 0; k < res.length; k++) {
-          if (res[k].product_name === chooseId && res[k].stock_quantity <= 0 && res[k].stock_quantity - chosenQuantity <= 0) {
-            console.log("I am so sorry, we only have " + res[k].stock_quantity + " " + chooseId + "(s) in stock.");
+          if (res[k].product_name === chooseId && res[k].stock_quantity <= 0) {
+            console.log(chalk.bold.blue("I am terribly sorry, we are all out of " + chooseId + "."));
             notEnough();
-             break;
-          } else if (res[k].product_name === chooseId && res[k].stock_quantity >= 0 && res[k].stock_quantity - chosenQuantity >= 0) {
-            purchArr.push("$" + (res[k].price_to_customer * chosenQuantity).toFixed(2));
-            console.log("Your total for " + chosenQuantity + "  " + chooseId + "(s) is: " + purchArr);
-            moMoney();
             break;
+          }
+          if (res[k].product_name === chooseId && res[k].stock_quantity - chosenQuantity <= 0) {
+            console.log(chalk.bold.blue("I am so sorry, we only have " + res[k].stock_quantity + " " + chooseId + "(s) in stock."));
+            notEnough();
+            break;
+          }
+          if (res[k].product_name === chooseId && res[k].stock_quantity >= 0 && res[k].stock_quantity - chosenQuantity >= 0) {
+            purchArr.push("$" + (res[k].price_to_customer * chosenQuantity).toFixed(2));
+            connection.query(
+              "UPDATE products SET ? WHERE ?",
+              [
+                {
+                  stock_quantity: res[k].stock_quantity - chosenQuantity
+                },
+                {
+                  product_name: chooseId
+                }
+              ],
+              function(error) {
+                if (error) throw error;
+              }
+              );
+            console.log(chalk.bold.cyan("Your total for " + chosenQuantity + "  " + chooseId + "(s) is: " + purchArr));
+            console.log(chalk.bold.green("Thank you for paying $" + (res[k].price_to_customer * chosenQuantity).toFixed(2) + ". Here (is)are your " + chosenQuantity + " " + chooseId + "(s)"));
+            moMoney();
           } else {
 
           }
@@ -95,11 +116,6 @@ function purchase() {
 
       });
   });
-
-  //connection.query("SELECT * FROM products WHERE product_name = " + chooseID, function (err, res) {
-  // if (err) throw err;
-  // console.log(res);
-  // });
 
 }
 
@@ -110,22 +126,23 @@ function notEnough() {
       type: "list",
       message: "Would you like to re-order, or would you prefer to wait until more are in stock?",
       choices: ["Yes, I would like to re-order please.", "Thank-you, but maybe I will come back at another time."]
-     // choices: ["stay", "go"]
+      // choices: ["stay", "go"]
     }])
 
     .then(function (answer) {
-      if// (answer.stayOrGo === "stay") {
-        (answer.stayOrGo === "Yes, I would like to re-order please.") {
-        console.log("Ok, here is our merchandise list again.");
-          purchase();
+      if // (answer.stayOrGo === "stay") {
+      (answer.stayOrGo === "Yes, I would like to re-order please.") {
+        console.log(chalk.green("Ok, here is our merchandise list again."));
+        purchase();
       } else //(answer.stayOrGo === "Thank-you, but maybe I will come back at another time.")
       {
-        console.log("I am sorry that we could not help you today, but please come back soon!");
+        console.log(chalk.magenta("I am sorry that we could not help you today, but please come back soon!"));
         myExit();
       }
     });
 
 }
+
 
 function moMoney() {
   inquirer
@@ -137,21 +154,21 @@ function moMoney() {
       //choices: ["save", "spend"]
     }])
     .then(function (answer) {
-      if// (answer.saveOrSpend === "spend") {
-        (answer.saveOrSpend === "Yes, I would like to see that merchandise list again, please.") {
-        console.log("Of course, here it is: ");
-          purchase();
+      if // (answer.saveOrSpend === "spend") {
+      (answer.saveOrSpend === "Yes, I would like to see that merchandise list again, please.") {
+        console.log(chalk.green("Of course, here it is: "));
+        purchase();
       } else //(answer.saveOrSpend === "No, thank-you, I am good.")
       {
-        console.log("Well thank you for your business, and please come back soon!");
+        console.log(chalk.magenta("Well thank you for your business, and please come back soon!"));
         myExit();
       }
-    
+
     });
-    
+
 }
 
 function myExit() {
-  console.log("Good-bye and thank you for choosing BamaZon!");
+  console.log(chalk.yellow("Good-bye and thank you for choosing BamaZon!"));
   connection.end();
 }
