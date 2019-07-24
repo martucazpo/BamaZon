@@ -84,7 +84,7 @@ function purchase() {
             notEnough();
             break;
           }
-          if (res[k].product_name === chooseId && res[k].stock_quantity - chosenQuantity <= 0) {
+          if (res[k].product_name === chooseId && res[k].stock_quantity - chosenQuantity <= -1) {
             console.log(chalk.bold.blue("I am so sorry, we only have " + res[k].stock_quantity + " " + chooseId + "(s) in stock."));
             notEnough();
             break;
